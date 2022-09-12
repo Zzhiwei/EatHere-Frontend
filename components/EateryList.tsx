@@ -16,27 +16,27 @@ enum PriceRange {
 
 const eateries: Eatery[] = [
   {
-    name: 'Geylang Laksa Prawn Noodles (Sims Drive)',
+    name: 'Geylang Laksa Prawn Noodles (Sims Drive) 1',
     address: '45 Sims Dr, #01-150, Singapore 380045',
     priceRange: PriceRange.EXPENSIVE,
   },
   {
-    name: 'Geylang Laksa Prawn Noodles (Sims Drive)',
+    name: 'Geylang Laksa Prawn Noodles (Sims Drive) 2',
     address: '45 Sims Dr, #01-150, Singapore 380045',
     priceRange: PriceRange.EXPENSIVE,
   },
   {
-    name: 'Geylang Laksa Prawn Noodles (Sims Drive)',
+    name: 'Geylang Laksa Prawn Noodles (Sims Drive) 3',
     address: '45 Sims Dr, #01-150, Singapore 380045',
     priceRange: PriceRange.EXPENSIVE,
   },
   {
-    name: 'Geylang Laksa Prawn Noodles (Sims Drive)',
+    name: 'Geylang Laksa Prawn Noodles (Sims Drive) 4',
     address: '45 Sims Dr, #01-150, Singapore 380045',
     priceRange: PriceRange.EXPENSIVE,
   },
   {
-    name: 'Geylang Laksa Prawn Noodles (Sims Drive)',
+    name: 'Geylang Laksa Prawn Noodles (Sims Drive) 5',
     address: '45 Sims Dr, #01-150, Singapore 380045',
     priceRange: PriceRange.EXPENSIVE,
   },
