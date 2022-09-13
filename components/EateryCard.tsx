@@ -3,6 +3,7 @@ import { Eatery } from './EateryList';
 
 interface Props {
   eatery: Eatery;
+  edit: () => void;
 }
 
 const priceMap = {
@@ -11,7 +12,7 @@ const priceMap = {
   EXPENSIVE: 3,
 };
 
-export const EateryCard = ({ eatery }: Props) => {
+export const EateryCard = ({ eatery, edit }: Props) => {
   return (
     <div className=" rounded-lg bg-white px-10 py-12 shadow-lg">
       <div className="relative flex flex-col gap-y-3">
@@ -25,8 +26,8 @@ export const EateryCard = ({ eatery }: Props) => {
           ))}
         </div>
         <div className="absolute right-0 bottom-0 flex gap-x-3">
-          <EditIcon />
-          <DeleteIcon />
+          <EditIcon edit={edit} />
+          <DeleteIcon edit={edit} />
         </div>
       </div>
     </div>
@@ -56,8 +57,8 @@ const MoneyBagIcon = () => (
   </svg>
 );
 
-const EditIcon = () => (
-  <div className="group cursor-pointer">
+const EditIcon = ({ edit }: { edit: () => void }) => (
+  <div onClick={edit} className="group cursor-pointer">
     <svg
       width="30"
       height="30"
@@ -74,8 +75,8 @@ const EditIcon = () => (
   </div>
 );
 
-const DeleteIcon = () => (
-  <div className="group cursor-pointer">
+const DeleteIcon = ({ edit }: { edit: () => void }) => (
+  <div onClick={edit} className="group cursor-pointer">
     <svg
       width="30"
       height="30"

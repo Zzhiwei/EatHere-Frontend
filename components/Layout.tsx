@@ -1,4 +1,6 @@
-const Layout = ({ children }) => {
+import { ReactNode } from 'react';
+
+const Layout = ({ children }: { children: ReactNode }) => {
   const height = 'h-16';
 
   return (

@@ -1,43 +1,54 @@
 import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
-import { Eatery } from './EateryList';
+import { Eatery, PriceRange } from './EateryList';
 
 interface Props {
-  eatery: Eatery;
+  eatery?: Eatery;
+  cancelEdit: () => void;
+  onSubmit: (eatery: Eatery) => void;
 }
 
-const priceMap = {
-  CHEAP: 1,
-  AVERAGE: 2,
-  EXPENSIVE: 3,
-};
-
-export const EditEateryCard = ({ eatery }: Props) => {
+export const EateryForm = ({ eatery, cancelEdit, onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  //   const onSubmit = (data) => console.log({ data });
-  const onSubmit = () => {};
+  } = useForm({
+    defaultValues: {
+      name: eatery?.name || '',
+      address: eatery?.address || '',
+      priceRange: eatery?.priceRange || '',
+    },
+  });
 
-  console.log({ errors });
+  const onFormSubmit = (data: {
+    name: string;
+    address: string;
+    priceRange: string;
+  }) => {
+    const newData = { ...data, _id: eatery?._id };
+    onSubmit(newData as Eatery);
+  };
+
   return (
     <div className=" rounded-lg bg-white px-10 py-12 shadow-lg">
-      <form className="flex flex-col gap-y-3" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col gap-y-3"
+        onSubmit={handleSubmit(onFormSubmit)}
+      >
         <div>
           <input
             className=" w-10/12 border-b-2 pb-2 pl-1 text-xl text-text1 outline-none"
             type="text"
             placeholder="Name"
-            {...register('Name', {
+            {...register('name', {
               required: 'This is required',
               minLength: { value: 3, message: 'minimum length is 3' },
               maxLength: { value: 99, message: 'maximum length is 99' },
             })}
           />
-          {errors.Name && (
-            <div className=" text-red-500">{errors.Name.message as string}</div>
+          {errors.name && (
+            <div className=" text-red-500">{errors.name.message as string}</div>
           )}
         </div>
         <div>
@@ -45,15 +56,15 @@ export const EditEateryCard = ({ eatery }: Props) => {
             className=" w-10/12 border-b-2 pb-2 pl-1 text-xl text-text1 outline-none"
             type="text"
             placeholder="Address"
-            {...register('Address', {
+            {...register('address', {
               required: 'This is required',
               minLength: { value: 3, message: 'minimum length is 3' },
               maxLength: { value: 99, message: 'maximum length is 99' },
             })}
           />
-          {errors.Address && (
+          {errors.address && (
             <div className=" text-red-500">
-              {errors.Address.message as string}
+              {errors.address.message as string}
             </div>
           )}
         </div>
@@ -61,16 +72,16 @@ export const EditEateryCard = ({ eatery }: Props) => {
           <select
             placeholder="Price?"
             className="w-52 border-b-2 pb-2 text-xl text-text1 outline-none"
-            {...register('PriceRange', { required: 'This is required' })}
+            {...register('priceRange', { required: 'This is required' })}
           >
             <option value=""></option>
-            <option value="cheap">cheap</option>
-            <option value="average">average</option>
-            <option value="expensive">expensive</option>
+            <option value={PriceRange.CHEAP}>cheap</option>
+            <option value={PriceRange.AVERAGE}>average</option>
+            <option value={PriceRange.EXPENSIVE}>expensive</option>
           </select>
-          {errors.PriceRange && (
+          {errors.priceRange && (
             <div className=" text-red-500">
-              {errors.PriceRange.message as string}
+              {errors.priceRange.message as string}
             </div>
           )}
         </div>
@@ -80,7 +91,10 @@ export const EditEateryCard = ({ eatery }: Props) => {
             className="mt-5 h-14 w-40 cursor-pointer rounded-md bg-amber-300  p-3 hover:border-2 hover:border-gray-800"
             type="submit"
           />
-          <button className="mt-5 h-14 w-40 rounded-md bg-text1 p-3 text-white hover:border-2 hover:border-amber-300">
+          <button
+            onClick={cancelEdit}
+            className="mt-5 h-14 w-40 rounded-md bg-text1 p-3 text-white hover:border-2 hover:border-amber-300"
+          >
             Cancel
           </button>
         </div>
