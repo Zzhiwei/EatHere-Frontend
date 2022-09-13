@@ -10,6 +10,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Save your favourite eateries!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <EateryList />
     </>
   );

@@ -1,17 +1,6 @@
 import { Fragment } from 'react';
+
 import { Eatery } from './EateryList';
-
-interface Props {
-  eatery: Eatery;
-  edit: () => void;
-  onDelete: () => void;
-}
-
-const priceMap = {
-  CHEAP: 1,
-  AVERAGE: 2,
-  EXPENSIVE: 3,
-};
 
 export const EateryCard = ({ eatery, edit, onDelete }: Props) => {
   return (
@@ -93,3 +82,15 @@ const DeleteIcon = ({ onDelete }: { onDelete: () => void }) => (
     </svg>
   </div>
 );
+
+interface Props {
+  eatery: Eatery;
+  edit: () => void;
+  onDelete: () => void;
+}
+
+const priceMap = {
+  CHEAP: 1,
+  AVERAGE: 2,
+  EXPENSIVE: 3,
+};
