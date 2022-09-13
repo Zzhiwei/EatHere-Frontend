@@ -1,10 +1,18 @@
 import type { NextPage } from 'next';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import { EateryList } from '../components/EateryList';
+import Head from 'next/head';
 
 const Home: NextPage = () => {
-  return <EateryList />;
+  return (
+    <>
+      <Head>
+        <title>EatHere</title>
+        <meta name="description" content="Save your favourite eateries!" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <EateryList />
+    </>
+  );
 };
 
 export default Home;

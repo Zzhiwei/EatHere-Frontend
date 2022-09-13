@@ -6,7 +6,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 ${height} w-screen bg-white shadow-lg`}
+        className={`fixed top-0 left-0 ${height} z-10 w-screen bg-white shadow-lg`}
       />
       <div className={`${height}`}></div>
       {children}

@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { useForm } from 'react-hook-form';
 import { Eatery, PriceRange } from './EateryList';
 
@@ -74,7 +73,10 @@ export const EateryForm = ({ eatery, cancelEdit, onSubmit }: Props) => {
             className="w-52 border-b-2 pb-2 text-xl text-text1 outline-none"
             {...register('priceRange', { required: 'This is required' })}
           >
-            <option value=""></option>
+            {/* <option value=""></option> */}
+            <option value="" disabled selected>
+              Price Range?
+            </option>
             <option value={PriceRange.CHEAP}>cheap</option>
             <option value={PriceRange.AVERAGE}>average</option>
             <option value={PriceRange.EXPENSIVE}>expensive</option>
