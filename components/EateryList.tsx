@@ -1,11 +1,11 @@
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Container from '@mui/material/Container';
-import Snackbar from '@mui/material/Snackbar';
 import axios from 'axios';
 import { forwardRef, Fragment, useState } from 'react';
+import { toast } from 'react-toastify';
 
 import { EateryCard } from './EateryCard';
-import { EateryForm } from './EditEateryCard';
+import { EateryForm } from './EditForm';
 import { useFetchEateries } from './hooks/useFetchEateries';
 
 export const EateryList = () => {
@@ -13,33 +13,30 @@ export const EateryList = () => {
   const [isAdding, setIsAdding] = useState(false);
   const { eateries, setEateries } = useFetchEateries();
 
-  const [open, setOpen] = useState(false);
-  const [snackBarMessage, setSnackBarMessage] = useState('');
-
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   const createEatery = async (eatery: Eatery) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_EATERY_API_ENDPOINT}/eatery/create`,
-        eatery
+        {
+          ...eatery,
+          userId: localStorage.getItem('userId'),
+        },
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem('authToken')}` || '',
+          },
+        }
       );
       if (res.data) {
         setEateries([res.data, ...eateries]);
       }
+
       setIsAdding(false);
-      setSnackBarMessage('Added a new eatery!');
-      setOpen(true);
-    } catch {
+      toast.success('Added a new eatery!');
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        return toast.error('Please login to create a new post');
+      }
       alert('Oops! Something has gone wrong, Please try again.');
     }
   };
@@ -48,7 +45,12 @@ export const EateryList = () => {
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_EATERY_API_ENDPOINT}/eatery/update/${eatery._id}`,
-        eatery
+        eatery,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem('authToken')}` || '',
+          },
+        }
       );
       if (res.data) {
         const copy = [...eateries];
@@ -56,9 +58,11 @@ export const EateryList = () => {
         setEateries(copy);
       }
       setEditingIndex(null);
-      setSnackBarMessage('Updated eatery information!');
-      setOpen(true);
-    } catch {
+      toast.success('Updated eatery information!');
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        return toast.error('Please login to edit a post');
+      }
       alert('Oops! Something has gone wrong, Please try again.');
     }
   };
@@ -66,31 +70,27 @@ export const EateryList = () => {
   const deleteEatery = async (id: string) => {
     try {
       await axios.delete(
-        `${process.env.NEXT_PUBLIC_EATERY_API_ENDPOINT}/eatery/delete/${id}`
+        `${process.env.NEXT_PUBLIC_EATERY_API_ENDPOINT}/eatery/delete/${id}`,
+        {
+          headers: {
+            Authorization: `bearer ${localStorage.getItem('authToken')}` || '',
+          },
+        }
       );
+
       setEateries(eateries.filter((e) => e._id !== id));
-      setSnackBarMessage('Deleted eatery!');
-      setOpen(true);
-    } catch {
-      alert('Oops! Something has gone wrong, Please try again.');
+      toast.success('Deleted eatery!');
+    } catch (e: any) {
+      if (e.response.status === 403) {
+        toast.error('only admins can delete posts');
+      } else if (e.response.status === 401) {
+        toast.error('please login as admin to delete post');
+      }
     }
   };
 
   return (
     <Container maxWidth="md">
-      <Snackbar
-        open={open}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        autoHideDuration={1500}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          {snackBarMessage}
-        </Alert>
-      </Snackbar>
       <div className="container mt-5">
         {isAdding ? (
           <EateryForm
@@ -144,6 +144,11 @@ export interface Eatery {
   priceRange: PriceRange;
   _id: string;
 }
+
+type SubmitData = Eatery & {
+  userId?: string;
+  authToken?: string;
+};
 
 export enum PriceRange {
   CHEAP = 'CHEAP',

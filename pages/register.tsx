@@ -1,9 +1,8 @@
 import type { NextPage } from 'next';
-import { EateryList } from '../components/EateryList';
 import Head from 'next/head';
-import { SignInForm } from '../components/SignInForm';
+import { SignUpForm } from '../components/SignUpForm';
 
-const Home: NextPage = () => {
+const Register: NextPage = () => {
   return (
     <>
       <Head>
@@ -11,9 +10,9 @@ const Home: NextPage = () => {
         <meta name="description" content="Save your favourite eateries!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <EateryList />
+      <SignUpForm />
     </>
   );
 };
 
-export default Home;
+export default Register;

@@ -2,12 +2,6 @@ import { useForm } from 'react-hook-form';
 
 import { Eatery, PriceRange } from './EateryList';
 
-interface Props {
-  eatery?: Eatery;
-  cancelEdit: () => void;
-  onSubmit: (eatery: Eatery) => void;
-}
-
 export const EateryForm = ({ eatery, cancelEdit, onSubmit }: Props) => {
   const {
     register,
@@ -105,3 +99,9 @@ export const EateryForm = ({ eatery, cancelEdit, onSubmit }: Props) => {
     </div>
   );
 };
+
+interface Props {
+  eatery?: Eatery;
+  cancelEdit: () => void;
+  onSubmit: (eatery: Eatery) => void;
+}
