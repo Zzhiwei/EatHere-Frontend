@@ -34,6 +34,7 @@ export const EateryList = () => {
       setIsAdding(false);
       toast.success('Added a new eatery!');
     } catch (e: any) {
+      console.log({ e });
       if (e.response?.status === 401) {
         return toast.error('Please login to create a new post');
       }
