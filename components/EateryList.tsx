@@ -2,10 +2,10 @@ import { CircularProgress } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Container from '@mui/material/Container';
 import axios from 'axios';
-import { forwardRef, Fragment, useState } from 'react';
+import { forwardRef, Fragment, useCallback, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { EateryCard } from './EateryCard';
+import EateryCard from './EateryCard';
 import { EateryForm } from './EditForm';
 import { useFetchEateries } from './hooks/useFetchEateries';
 
@@ -89,6 +89,18 @@ export const EateryList = () => {
       }
     }
   };
+  const handleClose = useCallback(() => setEditingIndex(undefined), []);
+
+  const FnStore = useMemo(() => {
+    const openEditFns: Array<Record<string, () => void>> = [];
+    for (let i = 0; i < eateries.length; i++) {
+      openEditFns.push({
+        openEdit: () => setEditingIndex(i),
+        deleteEatery: () => deleteEatery(eateries[i]._id),
+      });
+    }
+    return openEditFns;
+  }, [eateries]);
 
   return (
     <Container maxWidth="md">
@@ -121,13 +133,13 @@ export const EateryList = () => {
                   <EateryForm
                     onSubmit={updateEatery}
                     eatery={eatery}
-                    cancelEdit={() => setEditingIndex(undefined)}
+                    cancelEdit={handleClose}
                   />
                 ) : (
                   <EateryCard
                     eatery={eatery}
-                    edit={() => setEditingIndex(index)}
-                    onDelete={() => deleteEatery(eatery._id)}
+                    edit={FnStore[index].openEdit}
+                    onDelete={FnStore[index].deleteEatery}
                   />
                 )}
               </Fragment>

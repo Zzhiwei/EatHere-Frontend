@@ -1,8 +1,8 @@
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 
 import { Eatery } from './EateryList';
 
-export const EateryCard = ({ eatery, edit, onDelete }: Props) => {
+const EateryCard = ({ eatery, edit, onDelete }: Props) => {
   return (
     <div className=" rounded-lg bg-white px-10 py-12 shadow-lg">
       <div className="relative flex flex-col gap-y-3">
@@ -23,6 +23,8 @@ export const EateryCard = ({ eatery, edit, onDelete }: Props) => {
     </div>
   );
 };
+
+export default memo(EateryCard);
 
 const MoneyBagIcon = () => (
   <svg
