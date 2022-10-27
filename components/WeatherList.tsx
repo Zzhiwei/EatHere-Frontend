@@ -11,6 +11,12 @@ interface Weather {
 export const WeatherList = () => {
   const [data, setData] = useState<Weather[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [area, setArea] = useState<'EAST' | 'WEST'>('EAST');
+
+  const handleAreaChange = (e) => {
+    console.log(e.target.value);
+    setArea(e.target.value);
+  };
 
   const onRefresh = async () => {
     setLoading(true);
@@ -20,14 +26,12 @@ export const WeatherList = () => {
       }, 300);
     });
     const weatherData = await axios.get(
-      process.env.NEXT_PUBLIC_WEATHER_LAMBDA_ENDPOINT || 'error'
+      `${process.env.NEXT_PUBLIC_WEATHER_LAMBDA_ENDPOINT}?area=${area}` ||
+        'error'
     );
 
-    sessionStorage.setItem(
-      'weatherData',
-      JSON.stringify(weatherData.data.items[0].forecasts)
-    );
-    setData(weatherData.data.items[0].forecasts);
+    sessionStorage.setItem('weatherData', JSON.stringify(weatherData.data));
+    setData(weatherData.data);
     setLoading(false);
   };
 
@@ -44,11 +48,8 @@ export const WeatherList = () => {
       );
 
       if (!ignore) {
-        sessionStorage.setItem(
-          'weatherData',
-          JSON.stringify(weatherData.data.items[0].forecasts)
-        );
-        setData(weatherData.data.items[0].forecasts);
+        sessionStorage.setItem('weatherData', JSON.stringify(weatherData.data));
+        setData(weatherData.data);
       }
     };
 
@@ -59,12 +60,21 @@ export const WeatherList = () => {
   }, []);
   return (
     <Container>
-      <div className="flex justify-center">
+      <div className="mt-5 flex items-center justify-center">
+        <select
+          name="area"
+          value={area}
+          onChange={handleAreaChange}
+          className="mr-2 h-14 rounded-md p-4"
+        >
+          <option value="EAST">East</option>
+          <option value="WEST">West</option>
+        </select>
         <button
           onClick={onRefresh}
-          className=" mt-5 h-14 w-40 rounded-md bg-amber-300 p-3  hover:border-2 hover:border-text1"
+          className=" h-14 w-40 rounded-md bg-amber-300 p-3  hover:border-2 hover:border-text1"
         >
-          Refresh Data
+          Get Weather Data
         </button>
       </div>
       {loading ? (

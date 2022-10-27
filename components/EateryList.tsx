@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Container from '@mui/material/Container';
 import axios from 'axios';
@@ -11,7 +12,7 @@ import { useFetchEateries } from './hooks/useFetchEateries';
 export const EateryList = () => {
   const [editingIndex, setEditingIndex] = useState<null | number>();
   const [isAdding, setIsAdding] = useState(false);
-  const { eateries, setEateries } = useFetchEateries();
+  const { eateries, setEateries, loading, timeTaken } = useFetchEateries();
 
   const createEatery = async (eatery: Eatery) => {
     try {
@@ -34,7 +35,6 @@ export const EateryList = () => {
       setIsAdding(false);
       toast.success('Added a new eatery!');
     } catch (e: any) {
-      console.log({ e });
       if (e.response?.status === 401) {
         return toast.error('Please login to create a new post');
       }
@@ -108,25 +108,32 @@ export const EateryList = () => {
             </button>
           </div>
         )}
-        <div className="my-10 flex flex-col gap-y-5">
-          {eateries.map((eatery, index) => (
-            <Fragment key={eatery._id}>
-              {editingIndex === index ? (
-                <EateryForm
-                  onSubmit={updateEatery}
-                  eatery={eatery}
-                  cancelEdit={() => setEditingIndex(undefined)}
-                />
-              ) : (
-                <EateryCard
-                  eatery={eatery}
-                  edit={() => setEditingIndex(index)}
-                  onDelete={() => deleteEatery(eatery._id)}
-                />
-              )}
-            </Fragment>
-          ))}
-        </div>
+        <div className="my-10">time taken to load: {timeTaken} ms</div>
+        {loading ? (
+          <div className="flex justify-center text-xl">
+            <CircularProgress className="mt-10" />
+          </div>
+        ) : (
+          <div className="my-10 flex flex-col gap-y-5">
+            {eateries.map((eatery, index) => (
+              <Fragment key={eatery._id}>
+                {editingIndex === index ? (
+                  <EateryForm
+                    onSubmit={updateEatery}
+                    eatery={eatery}
+                    cancelEdit={() => setEditingIndex(undefined)}
+                  />
+                ) : (
+                  <EateryCard
+                    eatery={eatery}
+                    edit={() => setEditingIndex(index)}
+                    onDelete={() => deleteEatery(eatery._id)}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        )}
       </div>
     </Container>
   );
